@@ -15,6 +15,7 @@ export async function run(): Promise<void> {
     // Log the current timestamp, wait, then log the new timestamp
     core.debug(new Date().toTimeString())
     await wait(parseInt(ms, 10))
+    // nice
     core.debug(new Date().toTimeString())
 
     // Set outputs for other workflow steps to use
