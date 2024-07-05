@@ -10,7 +10,11 @@ import yaml from 'yaml'
 describe('watch.ts', () => {
   it('watches resources for changes', async () => {
     const { resources } = JSON.parse(
-      JSON.stringify(yaml.parse(fs.readFileSync('./__tests__/data/resources.yaml').toString()))
+      JSON.stringify(
+        yaml.parse(
+          fs.readFileSync('./__tests__/data/resources.yaml').toString()
+        )
+      )
     )
     const changes = await watch(resources)
     expect(changes).toEqual([])

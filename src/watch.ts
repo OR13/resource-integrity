@@ -7,7 +7,7 @@ export type ResourceWatch = {
   'media-type': `application/ld+json` // accept header
   'hash-algorithm': `sha-256` // IANA named hash algorithms registry
   'hash-digest': string
-  'cached-resource': string 
+  'cached-resource': string
 }
 
 export type ResourcesWatchList = ResourceWatch[]
@@ -51,7 +51,10 @@ export async function watch(
       .update(cachedResource)
       .digest('hex')
 
-    if (latestResourceDigest !== resource['hash-digest'] || cachedResourceDigest !== resource['hash-digest']) {
+    if (
+      latestResourceDigest !== resource['hash-digest'] ||
+      cachedResourceDigest !== resource['hash-digest']
+    ) {
       changes.push({
         ...resource,
         'latest-resource-digest': latestResourceDigest,

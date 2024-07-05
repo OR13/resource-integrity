@@ -28497,6 +28497,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.watch = watch;
 const axios_1 = __importDefault(__nccwpck_require__(8757));
 const node_crypto_1 = __importDefault(__nccwpck_require__(6005));
+const fs_1 = __importDefault(__nccwpck_require__(7147));
 const IANAHashToNodeHash = {
     'sha-256': 'sha256'
 };
@@ -28515,15 +28516,21 @@ async function watch(resources) {
             transformResponse: r => r
         });
         const hashAlg = IANAHashToNodeHash[resource['hash-algorithm']];
-        const digestHex = node_crypto_1.default
+        const latestResourceDigest = node_crypto_1.default
             .createHash(hashAlg)
             .update(data, 'utf8')
             .digest('hex');
-        if (digestHex !== resource['hash-digest']) {
+        const cachedResource = fs_1.default.readFileSync(resource['cached-resource']);
+        const cachedResourceDigest = node_crypto_1.default
+            .createHash(hashAlg)
+            .update(cachedResource)
+            .digest('hex');
+        if (latestResourceDigest !== resource['hash-digest'] ||
+            cachedResourceDigest !== resource['hash-digest']) {
             changes.push({
                 ...resource,
-                'hash-digest': digestHex,
-                content: data
+                'latest-resource-digest': latestResourceDigest,
+                'latest-resource': data
             });
         }
     }
