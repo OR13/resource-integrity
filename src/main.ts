@@ -22,7 +22,7 @@ export async function run(): Promise<void> {
     core.setOutput('changes', changes)
 
     if (changes.length > 0) {
-      throw new Error('Resources have changes')
+      core.setFailed(changes)
     }
   } catch (error) {
     // Fail the workflow run if an error occurs

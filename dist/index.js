@@ -28472,7 +28472,7 @@ async function run() {
         // Set outputs for other workflow steps to use
         core.setOutput('changes', changes);
         if (changes.length > 0) {
-            throw new Error('Resources have changes');
+            core.setFailed(changes);
         }
     }
     catch (error) {
