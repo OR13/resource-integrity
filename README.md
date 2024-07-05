@@ -20,7 +20,8 @@ Obtaining a hash for a resource:
 curl -fLs https://www.w3.org/ns/credentials/v2 > ./__tests__/data/vcdm.v2.jsonld
 sha256sum ./__tests__/data/vcdm.v2.jsonld
 
-curl -fLs https://json-schema.org/draft/2020-12/schema > ./__tests__/data/2020-12.schema.json
+curl -fLs https://json-schema.org/draft/2020-12/schema > \
+./__tests__/data/2020-12.schema.json
 sha256sum ./__tests__/data/2020-12.schema.json
 ```
 
