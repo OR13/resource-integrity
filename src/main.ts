@@ -1,5 +1,7 @@
 import * as core from '@actions/core'
-import { wait } from './wait'
+import { watch } from './watch'
+import fs from 'fs'
+import yaml from 'yaml'
 
 /**
  * The main function for the action.
@@ -7,19 +9,15 @@ import { wait } from './wait'
  */
 export async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-
+    const resourcesPath: string = core.getInput('resources')
     // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
-
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    // nice
-    core.debug(new Date().toTimeString())
-
+    core.debug(`Checking resources ...`)
+    const {resources} = JSON.parse(JSON.stringify(yaml.parse(fs.readFileSync(resourcesPath).toString())))
+    const changes = JSON.stringify(await watch(resources), null, 2)
+    core.debug(`Resource changes:`)
+    core.debug(changes)
     // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+    core.setOutput('changes', changes)
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
