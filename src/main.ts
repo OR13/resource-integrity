@@ -22,6 +22,7 @@ export async function run(): Promise<void> {
     core.setOutput('changes', changes)
 
     if (changes.length > 0) {
+      console.error(changes)
       throw new Error('Resources have changes')
     }
   } catch (error) {
