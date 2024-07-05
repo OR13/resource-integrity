@@ -35,7 +35,7 @@ describe('action', () => {
     getInputMock.mockImplementation(name => {
       switch (name) {
         case 'resources':
-          return './resources.yaml'
+          return './__tests__/data/resources.yaml'
         default:
           return ''
       }
@@ -54,7 +54,7 @@ describe('action', () => {
     getInputMock.mockImplementation(name => {
       switch (name) {
         case 'resources':
-          return './resources.broken.yaml'
+          return './__tests__/data/resources.broken.yaml'
         default:
           return ''
       }

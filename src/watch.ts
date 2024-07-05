@@ -1,17 +1,20 @@
 import axios from 'axios'
 import crypto from 'node:crypto'
+import fs from 'fs'
 
 export type ResourceWatch = {
   id: string // url
   'media-type': `application/ld+json` // accept header
   'hash-algorithm': `sha-256` // IANA named hash algorithms registry
-  'hash-digest'?: string
+  'hash-digest': string
+  'cached-resource': string 
 }
 
 export type ResourcesWatchList = ResourceWatch[]
 
 export type ChangedResource = ResourceWatch & {
-  content: string
+  'latest-resource-digest': string
+  'latest-resource': string
 }
 
 export type ResourceChanges = ChangedResource[]
@@ -37,15 +40,22 @@ export async function watch(
       transformResponse: r => r
     })
     const hashAlg = IANAHashToNodeHash[resource['hash-algorithm']]
-    const digestHex = crypto
+    const latestResourceDigest = crypto
       .createHash(hashAlg)
       .update(data, 'utf8')
       .digest('hex')
-    if (digestHex !== resource['hash-digest']) {
+
+    const cachedResource = fs.readFileSync(resource['cached-resource'])
+    const cachedResourceDigest = crypto
+      .createHash(hashAlg)
+      .update(cachedResource)
+      .digest('hex')
+
+    if (latestResourceDigest !== resource['hash-digest'] || cachedResourceDigest !== resource['hash-digest']) {
       changes.push({
         ...resource,
-        'hash-digest': digestHex,
-        content: data
+        'latest-resource-digest': latestResourceDigest,
+        'latest-resource': data
       })
     }
   }

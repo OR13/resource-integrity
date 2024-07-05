@@ -12,7 +12,7 @@ inputs:
   resources:
     description: 'Resources to watch'
     required: true
-    default: './resources.yaml'
+    default: './__tests__/data/resources.yaml'
 
 # Define your outputs here.
 outputs:

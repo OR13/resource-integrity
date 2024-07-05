@@ -3,3 +3,4 @@ resources:
     media-type: application/ld+json
     hash-algorithm: sha-256
     hash-digest: 31d22e074ea436daaaabd6954a8e73c634915e980d54656f044c7fb26fb490f6
+    cached-resource: ./__tests__/data/vcdm.v2.jsonld

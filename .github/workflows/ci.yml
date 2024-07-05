@@ -57,7 +57,7 @@ jobs:
         id: test-action
         uses: ./
         with:
-          resources: './resources.yaml'
+          resources: './__tests__/data/resources.yaml'
 
       - name: Print Output
         id: output
