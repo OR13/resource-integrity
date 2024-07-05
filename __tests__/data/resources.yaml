@@ -4,3 +4,9 @@ resources:
     hash-algorithm: sha-256
     hash-digest: 31d22e074ea436daaaabd6954a8e73c634915e980d54656f044c7fb26fb490f6
     cached-resource: ./__tests__/data/vcdm.v2.jsonld
+
+  - id: https://json-schema.org/draft/2020-12/schema
+    media-type: application/schema+json
+    hash-algorithm: sha-256
+    hash-digest: 41da76f5afb7ce062d248f762463a92f7ca47e4e0f905b224ba6afeef91ded0f
+    cached-resource: ./__tests__/data/2020-12.schema.json
