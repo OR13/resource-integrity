@@ -11,6 +11,9 @@ on:
 permissions:
   contents: read
 
+env:
+  ACTIONS_STEP_DEBUG: true
+
 jobs:
   test-typescript:
     name: TypeScript Tests
