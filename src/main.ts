@@ -12,7 +12,9 @@ export async function run(): Promise<void> {
     const resourcesPath: string = core.getInput('resources')
     // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
     core.debug(`Checking resources ...`)
-    const {resources} = JSON.parse(JSON.stringify(yaml.parse(fs.readFileSync(resourcesPath).toString())))
+    const { resources } = JSON.parse(
+      JSON.stringify(yaml.parse(fs.readFileSync(resourcesPath).toString()))
+    )
     const changes = JSON.stringify(await watch(resources), null, 2)
     core.debug(`Resource changes:`)
     core.debug(changes)
