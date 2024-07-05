@@ -16,7 +16,7 @@ const runMock = jest.spyOn(main, 'run')
 let debugMock: jest.SpiedFunction<typeof core.debug>
 let errorMock: jest.SpiedFunction<typeof core.error>
 let getInputMock: jest.SpiedFunction<typeof core.getInput>
-// let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
+let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
 let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
 
 describe('action', () => {
@@ -26,11 +26,11 @@ describe('action', () => {
     debugMock = jest.spyOn(core, 'debug').mockImplementation()
     errorMock = jest.spyOn(core, 'error').mockImplementation()
     getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
-    // setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
+    setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
     setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
   })
 
-  it('sets the time output', async () => {
+  it('success when no changes', async () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(name => {
       switch (name) {
@@ -46,6 +46,25 @@ describe('action', () => {
     // Verify that all of the core library functions were called correctly
     expect(debugMock).toHaveBeenNthCalledWith(1, 'Checking resources ...')
     expect(setOutputMock).toHaveBeenNthCalledWith(1, 'changes', '[]')
+    expect(errorMock).not.toHaveBeenCalled()
+  })
+
+  it('failure when changes exist', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'resources':
+          return './resources.broken.yaml'
+        default:
+          return ''
+      }
+    })
+
+    await main.run()
+    expect(runMock).toHaveReturned()
+
+    // Verify that all of the core library functions were called correctly
+    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Resources have changes')
     expect(errorMock).not.toHaveBeenCalled()
   })
 })

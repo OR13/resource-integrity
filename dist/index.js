@@ -28471,6 +28471,9 @@ async function run() {
         core.debug(changes);
         // Set outputs for other workflow steps to use
         core.setOutput('changes', changes);
+        if (changes.length > 0) {
+            throw new Error('Resources have changes');
+        }
     }
     catch (error) {
         // Fail the workflow run if an error occurs
