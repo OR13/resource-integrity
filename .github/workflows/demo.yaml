@@ -1,0 +1,23 @@
+name: Demo
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  resource-integrity:
+    name: Resource Integrity
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Confirm Cache
+        uses: or13/resource-integrity@main
+        with:
+          resources: ./__tests__/data/resources.yaml
