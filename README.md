@@ -14,7 +14,7 @@ this property to ensure interoperability.
 
 ## Alternatives
 
-```
+```bash
 curl -fLs https://www.w3.org/ns/credentials/v2 > ./__tests__/data/vcdm.v2.jsonld
 sha256sum ./__tests__/data/vcdm.v2.jsonld
 ```
