@@ -28471,8 +28471,7 @@ async function run() {
         core.debug(changes);
         // Set outputs for other workflow steps to use
         core.setOutput('changes', changes);
-        if (changes.length > 0) {
-            console.error(changes);
+        if (changes !== '[]') {
             throw new Error('Resources have changes');
         }
     }
