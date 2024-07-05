@@ -8,13 +8,13 @@ export type ResourceWatch = {
   'hash-digest'?: string
 }
 
-export type ResourcesWatchList = Array<ResourceWatch>
+export type ResourcesWatchList = ResourceWatch[]
 
 export type ChangedResource = ResourceWatch & {
   content: string
 }
 
-export type ResourceChanges = Array<ChangedResource>
+export type ResourceChanges = ChangedResource[]
 
 const IANAHashToNodeHash = {
   'sha-256': 'sha256'

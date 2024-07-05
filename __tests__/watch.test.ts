@@ -3,7 +3,7 @@
  */
 
 import { watch } from '../src/watch'
-// import { expect } from '@jest/globals'
+import { expect } from '@jest/globals'
 import fs from 'fs'
 import yaml from 'yaml'
 
@@ -13,6 +13,6 @@ describe('watch.ts', () => {
       JSON.stringify(yaml.parse(fs.readFileSync('./resources.yaml').toString()))
     )
     const changes = await watch(resources)
-    console.log(changes)
+    expect(changes).toEqual([])
   })
 })
