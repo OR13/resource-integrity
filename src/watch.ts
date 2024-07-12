@@ -12,9 +12,13 @@ export type ResourceWatch = {
 
 export type ResourcesWatchList = ResourceWatch[]
 
-export type ChangedResource = ResourceWatch & {
-  'latest-resource-digest': string
-  'latest-resource': string
+export type ChangedResource = {
+  id: string // url
+  'media-type': string,
+  'digest-algorithm': string,
+  'expected-resource-digest': string,
+  'remote-resource-digest'?: string
+  'cached-resource-digest'?: string
 }
 
 export type ResourceChanges = ChangedResource[]
@@ -33,16 +37,16 @@ export async function watch(
 ): Promise<ResourceChanges> {
   const changes = [] as ResourceChanges
   for (const resource of resources) {
-    const { data } = await axios.get(resource.id, {
+    const { data: remoteResourceData } = await axios.get(resource.id, {
       headers: {
         Accept: resource['media-type']
       },
       transformResponse: r => r
     })
     const hashAlg = IANAHashToNodeHash[resource['hash-algorithm']]
-    const latestResourceDigest = crypto
+    const remoteResourceDigest = crypto
       .createHash(hashAlg)
-      .update(data, 'utf8')
+      .update(remoteResourceData, 'utf8')
       .digest('hex')
 
     const cachedResource = fs.readFileSync(resource['cached-resource'])
@@ -50,15 +54,27 @@ export async function watch(
       .createHash(hashAlg)
       .update(cachedResource)
       .digest('hex')
-
     if (
-      latestResourceDigest !== resource['hash-digest'] ||
+      remoteResourceDigest !== resource['hash-digest']
+    ) {
+      
+      changes.push({
+        id: resource.id,
+        'media-type': resource['media-type'],
+        'digest-algorithm': resource['hash-algorithm'],
+        'expected-resource-digest': resource['hash-digest'],
+        'remote-resource-digest': remoteResourceDigest,
+      })
+    }
+    if (
       cachedResourceDigest !== resource['hash-digest']
     ) {
       changes.push({
-        ...resource,
-        'latest-resource-digest': latestResourceDigest,
-        'latest-resource': data
+        id: resource.id,
+        'media-type': resource['media-type'],
+        'digest-algorithm': resource['hash-algorithm'],
+        'expected-resource-digest': resource['hash-digest'],
+        'cached-resource-digest': cachedResourceDigest,
       })
     }
   }

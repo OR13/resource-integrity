@@ -2,7 +2,7 @@ resources:
   - id: https://www.w3.org/ns/credentials/v2
     media-type: application/ld+json
     hash-algorithm: sha-256
-    hash-digest: 31d22e074ea436daaaabd6954a8e73c634915e980d54656f044c7fb26fb490f6
+    hash-digest: 374e31a83aff78a98ef4e692bb91df652cf6f07b73c387b9db8c991bfa7542fa
     cached-resource: ./__tests__/data/vcdm.v2.jsonld
 
   - id: https://json-schema.org/draft/2020-12/schema

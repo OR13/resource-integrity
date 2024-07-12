@@ -10,19 +10,17 @@ import yaml from 'yaml'
 export async function run(): Promise<void> {
   try {
     const resourcesPath: string = core.getInput('resources')
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
     core.debug(`Checking resources ...`)
     const { resources } = JSON.parse(
       JSON.stringify(yaml.parse(fs.readFileSync(resourcesPath).toString()))
     )
-    const changes = JSON.stringify(await watch(resources), null, 2)
-    core.debug(`Resource changes:`)
-    core.debug(changes)
-    // Set outputs for other workflow steps to use
-    core.setOutput('changes', changes)
-
-    if (changes !== '[]') {
-      throw new Error('Resources have changes')
+    const changes = await watch(resources)
+    if (changes.length) {
+      const error = JSON.stringify({
+        message: 'Resources have changes',
+        changes
+      }, null, 2)
+      throw new Error(error)
     }
   } catch (error) {
     // Fail the workflow run if an error occurs

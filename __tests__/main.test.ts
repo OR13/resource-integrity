@@ -45,12 +45,12 @@ describe('action', () => {
     expect(runMock).toHaveReturned()
     // Verify that all of the core library functions were called correctly
     expect(debugMock).toHaveBeenNthCalledWith(1, 'Checking resources ...')
-    expect(setOutputMock).toHaveBeenNthCalledWith(1, 'changes', '[]')
     expect(errorMock).not.toHaveBeenCalled()
   })
 
-  it('failure when changes exist', async () => {
-    // Set the action's inputs as return values from core.getInput()
+  it('error message indicates which resources have hashes different than expected', async () => {
+    // this mock has an expected hash that will not match the remote or the local cache
+    // this will be a common case for developer misconfiguration
     getInputMock.mockImplementation(name => {
       switch (name) {
         case 'resources':
@@ -64,7 +64,28 @@ describe('action', () => {
     expect(runMock).toHaveReturned()
 
     // Verify that all of the core library functions were called correctly
-    expect(setFailedMock).toHaveBeenNthCalledWith(1, 'Resources have changes')
+    const expectedError = `
+{
+  "message": "Resources have changes",
+  "changes": [
+    {
+      "id": "https://www.w3.org/ns/credentials/v2",
+      "media-type": "application/ld+json",
+      "digest-algorithm": "sha-256",
+      "expected-resource-digest": "11d22e074ea436daaaabd6954a8e73c634915e980d54656f044c7fb26fb490f6",
+      "remote-resource-digest": "374e31a83aff78a98ef4e692bb91df652cf6f07b73c387b9db8c991bfa7542fa"
+    },
+    {
+      "id": "https://www.w3.org/ns/credentials/v2",
+      "media-type": "application/ld+json",
+      "digest-algorithm": "sha-256",
+      "expected-resource-digest": "11d22e074ea436daaaabd6954a8e73c634915e980d54656f044c7fb26fb490f6",
+      "cached-resource-digest": "374e31a83aff78a98ef4e692bb91df652cf6f07b73c387b9db8c991bfa7542fa"
+    }
+  ]
+}
+    `.trim()
+    expect(setFailedMock).toHaveBeenNthCalledWith(1, expectedError)
     expect(errorMock).not.toHaveBeenCalled()
   })
 })
