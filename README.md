@@ -79,7 +79,7 @@ reported:
   `hash-digest` in the `resources.yaml`.
 - `remote-resource-digest` indicates that the remote resource has an unexpected
   change.
-- `cached-resource-digest` indicates that the cahced resource has an unexpected
+- `cached-resource-digest` indicates that the cached resource has an unexpected
   change.
 
 ### W3C Verifiable Credentials
