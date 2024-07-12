@@ -28530,7 +28530,7 @@ async function watch(resources) {
                 'media-type': resource['media-type'],
                 'digest-algorithm': resource['hash-algorithm'],
                 'expected-resource-digest': resource['hash-digest'],
-                'remote-resource-digest': remoteResourceDigest,
+                'remote-resource-digest': remoteResourceDigest
             });
         }
         if (cachedResourceDigest !== resource['hash-digest']) {
@@ -28539,7 +28539,7 @@ async function watch(resources) {
                 'media-type': resource['media-type'],
                 'digest-algorithm': resource['hash-algorithm'],
                 'expected-resource-digest': resource['hash-digest'],
-                'cached-resource-digest': cachedResourceDigest,
+                'cached-resource-digest': cachedResourceDigest
             });
         }
     }

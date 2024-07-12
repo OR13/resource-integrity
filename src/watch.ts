@@ -14,9 +14,9 @@ export type ResourcesWatchList = ResourceWatch[]
 
 export type ChangedResource = {
   id: string // url
-  'media-type': string,
-  'digest-algorithm': string,
-  'expected-resource-digest': string,
+  'media-type': string
+  'digest-algorithm': string
+  'expected-resource-digest': string
   'remote-resource-digest'?: string
   'cached-resource-digest'?: string
 }
@@ -54,27 +54,22 @@ export async function watch(
       .createHash(hashAlg)
       .update(cachedResource)
       .digest('hex')
-    if (
-      remoteResourceDigest !== resource['hash-digest']
-    ) {
-      
+    if (remoteResourceDigest !== resource['hash-digest']) {
       changes.push({
         id: resource.id,
         'media-type': resource['media-type'],
         'digest-algorithm': resource['hash-algorithm'],
         'expected-resource-digest': resource['hash-digest'],
-        'remote-resource-digest': remoteResourceDigest,
+        'remote-resource-digest': remoteResourceDigest
       })
     }
-    if (
-      cachedResourceDigest !== resource['hash-digest']
-    ) {
+    if (cachedResourceDigest !== resource['hash-digest']) {
       changes.push({
         id: resource.id,
         'media-type': resource['media-type'],
         'digest-algorithm': resource['hash-algorithm'],
         'expected-resource-digest': resource['hash-digest'],
-        'cached-resource-digest': cachedResourceDigest,
+        'cached-resource-digest': cachedResourceDigest
       })
     }
   }

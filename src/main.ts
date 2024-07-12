@@ -16,10 +16,14 @@ export async function run(): Promise<void> {
     )
     const changes = await watch(resources)
     if (changes.length) {
-      const error = JSON.stringify({
-        message: 'Resources have changes',
-        changes
-      }, null, 2)
+      const error = JSON.stringify(
+        {
+          message: 'Resources have changes',
+          changes
+        },
+        null,
+        2
+      )
       throw new Error(error)
     }
   } catch (error) {
