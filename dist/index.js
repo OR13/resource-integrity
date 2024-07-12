@@ -28463,16 +28463,15 @@ const yaml_1 = __importDefault(__nccwpck_require__(4083));
 async function run() {
     try {
         const resourcesPath = core.getInput('resources');
-        // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
         core.debug(`Checking resources ...`);
         const { resources } = JSON.parse(JSON.stringify(yaml_1.default.parse(fs_1.default.readFileSync(resourcesPath).toString())));
-        const changes = JSON.stringify(await (0, watch_1.watch)(resources), null, 2);
-        core.debug(`Resource changes:`);
-        core.debug(changes);
-        // Set outputs for other workflow steps to use
-        core.setOutput('changes', changes);
-        if (changes !== '[]') {
-            throw new Error('Resources have changes');
+        const changes = await (0, watch_1.watch)(resources);
+        if (changes.length) {
+            const error = JSON.stringify({
+                message: 'Resources have changes',
+                changes
+            }, null, 2);
+            throw new Error(error);
         }
     }
     catch (error) {
@@ -28509,28 +28508,38 @@ const IANAHashToNodeHash = {
 async function watch(resources) {
     const changes = [];
     for (const resource of resources) {
-        const { data } = await axios_1.default.get(resource.id, {
+        const { data: remoteResourceData } = await axios_1.default.get(resource.id, {
             headers: {
                 Accept: resource['media-type']
             },
             transformResponse: r => r
         });
         const hashAlg = IANAHashToNodeHash[resource['hash-algorithm']];
-        const latestResourceDigest = node_crypto_1.default
+        const remoteResourceDigest = node_crypto_1.default
             .createHash(hashAlg)
-            .update(data, 'utf8')
+            .update(remoteResourceData, 'utf8')
             .digest('hex');
         const cachedResource = fs_1.default.readFileSync(resource['cached-resource']);
         const cachedResourceDigest = node_crypto_1.default
             .createHash(hashAlg)
             .update(cachedResource)
             .digest('hex');
-        if (latestResourceDigest !== resource['hash-digest'] ||
-            cachedResourceDigest !== resource['hash-digest']) {
+        if (remoteResourceDigest !== resource['hash-digest']) {
             changes.push({
-                ...resource,
-                'latest-resource-digest': latestResourceDigest,
-                'latest-resource': data
+                id: resource.id,
+                'media-type': resource['media-type'],
+                'digest-algorithm': resource['hash-algorithm'],
+                'expected-resource-digest': resource['hash-digest'],
+                'remote-resource-digest': remoteResourceDigest,
+            });
+        }
+        if (cachedResourceDigest !== resource['hash-digest']) {
+            changes.push({
+                id: resource.id,
+                'media-type': resource['media-type'],
+                'digest-algorithm': resource['hash-algorithm'],
+                'expected-resource-digest': resource['hash-digest'],
+                'cached-resource-digest': cachedResourceDigest,
             });
         }
     }
