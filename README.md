@@ -50,6 +50,35 @@ Prevent applications from building when resources have changed:
     resources: ./__tests__/data/resources.yaml
 ```
 
+When resources have changed the action will fail, and the following eror will be reported:
+
+```json
+{
+  "message": "Resources have changes",
+  "changes": [
+    {
+      "id": "https://www.w3.org/ns/credentials/v2",
+      "media-type": "application/ld+json",
+      "digest-algorithm": "sha-256",
+      "expected-resource-digest": "11d22e074ea436daaaabd6954a8e73c634915e980d54656f044c7fb26fb490f6",
+      "remote-resource-digest": "374e31a83aff78a98ef4e692bb91df652cf6f07b73c387b9db8c991bfa7542fa"
+    },
+    {
+      "id": "https://www.w3.org/ns/credentials/v2",
+      "media-type": "application/ld+json",
+      "digest-algorithm": "sha-256",
+      "expected-resource-digest": "11d22e074ea436daaaabd6954a8e73c634915e980d54656f044c7fb26fb490f6",
+      "cached-resource-digest": "374e31a83aff78a98ef4e692bb91df652cf6f07b73c387b9db8c991bfa7542fa"
+    }
+  ]
+}
+```
+
+- `expected-resource-digest` will match what the action is expecting from `hash-digest` in the `resources.yaml`.
+- `remote-resource-digest` indicates that the remote resource has an unexpected change.
+- `cached-resource-digest` indicates that the cahced resource has an unexpected change.
+
+
 ### W3C Verifiable Credentials
 
 Please read [RFC9413](https://datatracker.ietf.org/doc/rfc9413/).
