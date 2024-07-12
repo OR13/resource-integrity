@@ -50,7 +50,8 @@ Prevent applications from building when resources have changed:
     resources: ./__tests__/data/resources.yaml
 ```
 
-When resources have changed the action will fail, and the following eror will be reported:
+When resources have changed the action will fail, and the following eror will be
+reported:
 
 ```json
 {
@@ -74,10 +75,12 @@ When resources have changed the action will fail, and the following eror will be
 }
 ```
 
-- `expected-resource-digest` will match what the action is expecting from `hash-digest` in the `resources.yaml`.
-- `remote-resource-digest` indicates that the remote resource has an unexpected change.
-- `cached-resource-digest` indicates that the cahced resource has an unexpected change.
-
+- `expected-resource-digest` will match what the action is expecting from
+  `hash-digest` in the `resources.yaml`.
+- `remote-resource-digest` indicates that the remote resource has an unexpected
+  change.
+- `cached-resource-digest` indicates that the cahced resource has an unexpected
+  change.
 
 ### W3C Verifiable Credentials
 
